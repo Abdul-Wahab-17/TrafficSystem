@@ -50,6 +50,8 @@ The tests cover shortest-path routing, rerouting around a congested road, unreac
 ./build/traffic_system 2 12 24      # Car from Saddar (12) to UniversityRoad (24)
 ```
 
+Add `--max-frames=N` to close the window after N frames (10 per second), for example for a smoke test.
+
 On Windows, the executable is `build\Release\traffic_system.exe`.
 
 Arguments are `vehicle start destination`. Vehicles: 1 Rickshaw, 2 Car, 3 Bike, 4 Truck, 5 Other. The interactive menu lists the location numbers. The window can be resized and the map scales to fit. Press **Esc** to quit.

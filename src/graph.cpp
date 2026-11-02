@@ -9,6 +9,14 @@
 
 using namespace std;
 
+Node::~Node()
+{
+    for (Edge* edge : edges)
+    {
+        delete edge;
+    }
+}
+
 void Node::addNeighbor(Node* neighbor)
 {
     neighbors.push_back(neighbor);

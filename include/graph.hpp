@@ -17,7 +17,10 @@ public:
 
     Node(int nodeId, float xCoord, float yCoord, std::string nodeName)
         : id(nodeId), x(xCoord), y(yCoord), name(std::move(nodeName)) {}
-    virtual ~Node() = default;
+    // A node owns the outgoing edges it created in addNeighbor()
+    virtual ~Node();
+    Node(const Node&) = delete;
+    Node& operator=(const Node&) = delete;
 
     // Connect this node and `neighbor` with a two-way road
     void addNeighbor(Node* neighbor);

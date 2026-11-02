@@ -5,7 +5,7 @@
 // it, and they re-plan at every node. Intersections cycle their signals and
 // vehicles wait at red lights.
 //
-// Usage: traffic_system [vehicle start destination]
+// Usage: traffic_system [vehicle start destination] [--max-frames=N]
 //   With no arguments an interactive menu asks for these.
 
 #include <cmath>
@@ -139,6 +139,24 @@ int main(int argc, char** argv)
 {
     srand(static_cast<unsigned int>(time(nullptr)));
 
+    // --max-frames=N closes the window after N frames (used for smoke tests and recordings)
+    long maxFrames = -1;
+    int positional = 0;
+    char* args[4] = { argv[0], nullptr, nullptr, nullptr };
+    for (int i = 1; i < argc; i++)
+    {
+        if (string(argv[i]).rfind("--max-frames=", 0) == 0)
+        {
+            maxFrames = atol(argv[i] + 13);
+        }
+        else if (positional < 3)
+        {
+            args[++positional] = argv[i];
+        }
+    }
+    argc = positional + 1;
+    argv = args;
+
     // Intersections (ids 11-24)
     vector<TrafficIntersection*> intersections = {
         new TrafficIntersection(11, 1000, 800, "Clifton", 4),
@@ -263,7 +281,8 @@ int main(int argc, char** argv)
     const Rectangle addButton = { 20, 20, 150, 44 };
     int frame = 0;
 
-    while (!WindowShouldClose())
+    long framesRun = 0;
+    while (!WindowShouldClose() && (maxFrames < 0 || framesRun++ < maxFrames))
     {
         if (++frame == kFramesPerLightChange)
         {
@@ -361,5 +380,11 @@ int main(int argc, char** argv)
         EndDrawing();
     }
     CloseWindow();
+
+    // `intersections` are a subset of `nodes`, so freeing `nodes` frees everything (and each node's edges)
+    for (Node* n : nodes)
+    {
+        delete n;
+    }
     return 0;
 }
